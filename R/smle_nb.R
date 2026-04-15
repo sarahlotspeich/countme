@@ -23,15 +23,18 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
   ## Transform to formulas -----------------------------------------------------
   analysis_formula = as.formula(analysis_formula)
   error_formula = as.formula(error_formula)
+  ## Convert any character variables in the analysis formula to factors --------
+  char_vars = names(which(sapply(data[, all.vars(analysis_formula[[3]])], is.character)))
+  for(col in char_vars) {
+    data[, col] = factor(data[, col])
+  }
   ## Outcome model -------------------------------------------------------------
   Y = as.character(analysis_formula)[2] ## outcome
   X_val = as.character(error_formula)[2] ## error-free covariate
-  C = setdiff(x = unlist(strsplit(x = gsub(pattern = " ",
-                                           replacement = "",
-                                           x = as.character(as.formula(analysis_formula))[3]),
-                                  split = "+",
-                                  fixed = TRUE)),
-              y = X_val)
+  C = setdiff(
+    x = all.vars(analysis_formula[[3]]), ## all variable names on the RHS
+    y = X_val ## but exclude X_val
+  )
   ## Error model ---------------------------------------------------------------
   Bspline = unlist(strsplit(x = gsub(pattern = " ",
                                      replacement = "",
@@ -41,6 +44,8 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
   ## Extract analysis model matrix (complete cases) for structure --------------
   analysis_mat = model.matrix(object = analysis_formula,
                               data = data)
+  C = setdiff(x = colnames(analysis_mat)[-1], # [-1] drops the intercept, uses model.matrix versions for facts
+              y = X_val)
   ### Rewrite model formulas using column names from the model matrices --------
   re_analysis_formula = paste0(Y, "~",
                                paste(colnames(analysis_mat)[-1],
@@ -80,38 +85,57 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
   x_obs = data.frame(unique(data[1:n, c(X_val)]))
   x_obs = data.frame(x_obs[order(x_obs[, 1]), ])
   m = nrow(x_obs)
-  x_obs_stacked = do.call(what = rbind,
-                          args = replicate(n = (N - n),
-                                           expr = x_obs,
-                                           simplify = FALSE))
-  x_obs_stacked = data.frame(x_obs_stacked[order(x_obs_stacked[, 1]), ])
-  colnames(x_obs) = colnames(x_obs_stacked) = c(X_val)
+  # x_obs_stacked = do.call(what = rbind,
+  #                         args = replicate(n = (N - n),
+  #                                          expr = x_obs,
+  #                                          simplify = FALSE))
+  # x_obs_stacked = data.frame(x_obs_stacked[order(x_obs_stacked[, 1]), ])
+  # colnames(x_obs) = colnames(x_obs_stacked) = c(X_val)
   ## Save static (X*,X,Y,C) since they don't change ----------------------------
-  comp_dat_val = data[c(1:n), c(Y, X_val, C, Bspline)]
-  comp_dat_val = merge(x = comp_dat_val,
-                       y = data.frame(x_obs, k = 1:m),
-                       all.x = TRUE)
-  comp_dat_val = cbind(comp_dat_val, int = 1) ### add intercept column
-  comp_dat_val = comp_dat_val[, c("int", Y, X_val, C, Bspline, "k")]
+  mm_val = model.matrix(object = analysis_formula,
+                        data = data[c(1:n), ])
+  colnames(mm_val)[colnames(mm_val) == "(Intercept)"] = "int"
+  comp_dat_val = data.frame(mm_val,
+                            data[c(1:n), c(Y, Bspline)],
+                            k = match(data[c(1:n), X_val], x_obs[, 1]),
+                            check.names = FALSE)
   comp_dat_val = data.matrix(comp_dat_val)
-
+  # comp_dat_val = data[c(1:n), c(Y, X_val, C, Bspline)]
+  # comp_dat_val = merge(x = comp_dat_val,
+  #                      y = data.frame(x_obs, k = 1:m),
+  #                      all.x = TRUE)
+  # comp_dat_val = cbind(comp_dat_val, int = 1) ### add intercept column
+  # comp_dat_val = comp_dat_val[, c("int", Y, X_val, C, Bspline, "k")]
+  # comp_dat_val = data.matrix(comp_dat_val)
   # (m x n)xd vectors of each (one column per person, one row per x) -----------
-  comp_dat_unval = suppressWarnings(
-    data.matrix(
-      cbind(data[-c(1:n), c(Y, C, Bspline)],
-            x_obs_stacked,
-            k = rep(seq(1, m), each = (N - n)))
-    )
-  )
-  comp_dat_unval = cbind(comp_dat_unval, int = 1) ### add intercept column
-  comp_dat_unval = comp_dat_unval[, c("int", Y, X_val, C, Bspline, "k")]
+  unval_rep = data[-c(1:n), ][rep(seq_len(N - n), times = m), ]
+  unval_rep[, X_val] = 0  # dummy value, gets overwritten immediately after
+  mm_unval = model.matrix(object = analysis_formula,
+                          data = unval_rep)
+  colnames(mm_unval)[colnames(mm_unval) == "(Intercept)"] = "int"
+  mm_unval[, X_val] = rep(x_obs[, 1], each = (N - n))  # substitute x_obs values
+  comp_dat_unval = data.frame(mm_unval,
+                              unval_rep[, c(Y, Bspline)],
+                              k = rep(seq_len(m), each = (N - n)),
+                              check.names = FALSE)
+  comp_dat_unval = data.matrix(comp_dat_unval)
+  # comp_dat_unval = suppressWarnings(
+  #   data.matrix(
+  #     cbind(data[-c(1:n), c(Y, C, Bspline)],
+  #           x_obs_stacked,
+  #           k = rep(seq(1, m), each = (N - n)))
+  #   )
+  # )
+  # comp_dat_unval = cbind(comp_dat_unval, int = 1) ### add intercept column
+  # comp_dat_unval = comp_dat_unval[, c("int", Y, X_val, C, Bspline, "k")]
   comp_dat_all = rbind(comp_dat_val, comp_dat_unval)
   ##############################################################################
   # Initialize analysis model parameters (beta) --------------------------------
-  ## Set initial values for beta and theta -------------------------------------
+  ## (Re-)define column names
   beta_cols = c("int", X_val, C)
+  ## Set initial values for beta and theta -------------------------------------
   cc_fit = glm.nb(formula = re_analysis_formula,
-                  data = data.frame(comp_dat_val))
+                  data = data.frame(comp_dat_val, check.names = FALSE))
   prev_beta = beta0 = matrix(data = cc_fit$coefficients,
                              ncol = 1)
   prev_theta = theta0 = cc_fit$theta

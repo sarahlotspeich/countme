@@ -42,7 +42,7 @@ M_step_nb = function(phi_aug, psi_t, ## weights and quantities from the E-step
                      tol) { ## criterion for convergence
   ## Update beta using weighted negative binomial regression -------------------
   new_fit = glm.nb(formula = re_analysis_formula,
-                   data = data.frame(cbind(comp_dat_all, phi_aug)),
+                   data = data.frame(comp_dat_all, phi_aug, check.names = FALSE),
                    weights = phi_aug,
                    init.theta = prev_theta)
   #control = glm.control(maxit = 2))
