@@ -1,0 +1,22 @@
+Package: countme
+Type: Package
+Title: Count regression with covariate measurement error
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Sarah", "Lotspeich",
+      email = "lotspes@wfu.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: Fits negative binomial regression models for count 
+    outcomes (subject to possible zero inflation) with covariate 
+    measurement error, using sieve maximum likelihood estimation
+    based on partial validation data.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Imports:
+  MASS, 
+  bizicount
