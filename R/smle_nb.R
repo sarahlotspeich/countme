@@ -158,30 +158,34 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
   while(it <= max_iter & !CONVERGED) {
     ############################################################################
     # E Step -------------------------------------------------------------------
-    E_step_res = E_step_nb(prev_beta = prev_beta,
-                           prev_theta = prev_theta,
-                           Y = Y,
-                           beta_cols = beta_cols,
-                           prev_p = prev_p,
-                           Bspline = Bspline,
-                           comp_dat_unval = comp_dat_unval,
-                           m = m,
-                           N = N,
-                           n = n)
+    E_step_res = E_step_nb(
+      prev_beta = prev_beta,
+      prev_theta = prev_theta,
+      Y = Y,
+      beta_cols = beta_cols,
+      prev_p = prev_p,
+      Bspline = Bspline,
+      comp_dat_unval = comp_dat_unval,
+      m = m,
+      N = N,
+      n = n
+      )
     ############################################################################
     # M Step -------------------------------------------------------------------
-    M_step_res = M_step_nb(phi_aug = E_step_res$phi_aug,
-                           psi_t = E_step_res$psi_t,
-                           re_analysis_formula = re_analysis_formula,
-                           comp_dat_all = comp_dat_all,
-                           prev_beta = prev_beta,
-                           prev_theta = prev_theta,
-                           prev_p = prev_p,
-                           p_val_num = p_val_num,
-                           m = m,
-                           N = N,
-                           n = n,
-                           tol = tol)
+    M_step_res = M_step_nb(
+      phi_aug = E_step_res$phi_aug,
+      psi_t = E_step_res$psi_t,
+      re_analysis_formula = re_analysis_formula,
+      comp_dat_all = comp_dat_all,
+      prev_beta = prev_beta,
+      prev_theta = prev_theta,
+      prev_p = prev_p,
+      p_val_num = p_val_num,
+      m = m,
+      N = N,
+      n = n,
+      tol = tol
+      )
     ############################################################################
     # Check for global convergence ---------------------------------------------
     CONVERGED = M_step_res$prop_conv == 1
@@ -255,15 +259,17 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
                   converged_msg = CONVERGED_MSG))
     } else {
       ## Calculate l(beta, theta, p) -------------------------------------------
-      od_loglik_conv = smle_nb_od_ll(N = N,
-                                     n = n,
-                                     Y = Y,
-                                     beta_cols = beta_cols,
-                                     Bspline = Bspline,
-                                     comp_dat_all = comp_dat_all,
-                                     beta = M_step_res$new_beta,
-                                     theta = M_step_res$new_theta,
-                                     p = M_step_res$new_p)
+      od_loglik_conv = smle_nb_od_ll(
+        N = N,
+        n = n,
+        Y = Y,
+        beta_cols = beta_cols,
+        Bspline = Bspline,
+        comp_dat_all = comp_dat_all,
+        beta = M_step_res$new_beta,
+        theta = M_step_res$new_theta,
+        p = M_step_res$new_p
+        )
       ## Return coefficients, B-spline coefficients, predictions ---------------
       return(list(coefficients = coeff_df,
                   bspline_coefficients = cbind(x_obs, M_step_res$new_p),
@@ -281,34 +287,37 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
     # Estimate Cov(theta) using profile likelihood -----------------------------
     h_N = pert_scale * N ^ ( - 1 / 2) # perturbation ---------------------------
     ## Calculate l(beta, theta, p) ---------------------------------------------
-    od_loglik_conv = smle_nb_od_ll(N = N,
-                                   n = n,
-                                   Y = Y,
-                                   beta_cols = beta_cols,
-                                   Bspline = Bspline,
-                                   comp_dat_all = comp_dat_all,
-                                   beta = M_step_res$new_beta,
-                                   theta = M_step_res$new_theta,
-                                   p = M_step_res$new_p)
+    od_loglik_conv = smle_nb_od_ll(
+      N = N,
+      n = n,
+      Y = Y,
+      beta_cols = beta_cols,
+      Bspline = Bspline,
+      comp_dat_all = comp_dat_all,
+      beta = M_step_res$new_beta,
+      theta = M_step_res$new_theta,
+      p = M_step_res$new_p
+      )
     ## Setup information matrix with l(beta, theta) ----------------------------
     I_coeff = matrix(data = od_loglik_conv,
                      nrow = length(new_coeff),
                      ncol = length(new_coeff))
     ## Calculate single perturbation profile likelihoods pl(beta, theta) -------
-    single_pert_theta = sapply(X = seq(1, ncol(I_coeff)),
-                               FUN = smle_nb_prof_ll,
-                               beta_theta = new_coeff,
-                               h_N = h_N,
-                               N = N,
-                               n = n,
-                               Y = Y,
-                               beta_cols = beta_cols,
-                               Bspline = Bspline,
-                               comp_dat_all = comp_dat_all,
-                               p0 = M_step_res$new_p,
-                               p_val_num = p_val_num,
-                               tol = tol,
-                               max_iter = max_iter)
+    single_pert_theta = sapply(
+      X = seq(1, ncol(I_coeff)),
+      FUN = smle_nb_prof_ll,
+      beta_theta = new_coeff,
+      h_N = h_N,
+      N = N,
+      n = n,
+      Y = Y,
+      beta_cols = beta_cols,
+      Bspline = Bspline,
+      comp_dat_all = comp_dat_all,
+      p0 = M_step_res$new_p,
+      p_val_num = p_val_num,
+      tol = tol,
+      max_iter = max_iter)
 
     if (any(is.na(single_pert_theta))) {
       I_coeff = matrix(data = NA,
@@ -328,20 +337,22 @@ smle_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_sca
     for (c in 1:ncol(I_coeff)) {
       pert_coeff = new_coeff
       pert_coeff[c] = pert_coeff[c] + h_N
-      double_pert_coeff = sapply(X = seq(c, ncol(I_coeff)),
-                                 FUN = smle_nb_prof_ll,
-                                 beta_theta = pert_coeff,
-                                 h_N = h_N,
-                                 N = N,
-                                 n = n,
-                                 Y = Y,
-                                 beta_cols = beta_cols,
-                                 Bspline = Bspline,
-                                 comp_dat_all = comp_dat_all,
-                                 p0 = M_step_res$new_p,
-                                 p_val_num = p_val_num,
-                                 max_iter = max_iter,
-                                 tol = tol)
+      double_pert_coeff = sapply(
+        X = seq(c, ncol(I_coeff)),
+        FUN = smle_nb_prof_ll,
+        beta_theta = pert_coeff,
+        h_N = h_N,
+        N = N,
+        n = n,
+        Y = Y,
+        beta_cols = beta_cols,
+        Bspline = Bspline,
+        comp_dat_all = comp_dat_all,
+        p0 = M_step_res$new_p,
+        p_val_num = p_val_num,
+        max_iter = max_iter,
+        tol = tol
+        )
       dpt = matrix(data = 0,
                    nrow = nrow(I_coeff),
                    ncol = ncol(I_coeff))
