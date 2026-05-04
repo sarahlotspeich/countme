@@ -56,11 +56,18 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
   C = setdiff(colnames(analysis_mat)[-1], X_val)
   Z = setdiff(colnames(zeroinfl_mat)[-1], X_val)
   ### Rewrite model formulas using column names from the model matrices --------
-  re_analysis_formula = paste0(Y, "~",
-                               paste(colnames(analysis_mat)[-1],
-                                     collapse = "+"),
-                               "|",
-                               paste(colnames(zeroinfl_mat)[-1], collapse = "+"))
+  if (length(colnames(zeroinfl_mat)) > 1) { #### if there are covariates in the zero-inflation model
+    re_analysis_formula = paste0(Y, "~",
+                                 paste(colnames(analysis_mat)[-1],
+                                       collapse = "+"),
+                                 "|",
+                                 paste(colnames(zeroinfl_mat)[-1], collapse = "+"))
+  } else { #### otherwise, just an intercept
+    re_analysis_formula = paste0(Y, "~",
+                                 paste(colnames(analysis_mat)[-1],
+                                       collapse = "+"),
+                                 "|1")
+  }
   ##############################################################################
   # Prepare for algorithm ------------------------------------------------------
   ## Define validation indicator and sample sizes ------------------------------
@@ -106,13 +113,6 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                             k = match(data[c(1:n), X_val], x_obs),
                             check.names = FALSE)
   comp_dat_val = data.matrix(comp_dat_val)
-  # comp_dat_val = data[c(1:n), unique(c(Y, X_val, C, Z, Bspline))]
-  # comp_dat_val = merge(x = comp_dat_val,
-  #                      y = data.frame(x_obs, k = 1:m),
-  #                      all.x = TRUE)
-  # comp_dat_val = cbind(comp_dat_val, int = 1) ### add intercept column
-  # comp_dat_val = comp_dat_val[, unique(c("int", Y, X_val, C, Z, Bspline, "k"))]
-  # comp_dat_val = data.matrix(comp_dat_val)
   # (m x n)xd vectors of each (one column per person, one row per x) -----------
   unval_rep = data[-c(1:n), ][rep(seq_len(N - n), times = m), ]
   unval_rep[, X_val] = 0  # dummy value, gets overwritten immediately after
@@ -127,19 +127,7 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                               k = rep(seq_len(m), each = (N - n)),
                               check.names = FALSE)
   comp_dat_unval = data.matrix(comp_dat_unval)
-  # comp_dat_unval = suppressWarnings(
-  #   data.matrix(
-  #     cbind(data[-c(1:n), unique(c(Y, C, setdiff(Z, X_val), Bspline))],
-  #           x_obs_stacked,
-  #           k = rep(seq(1, m), each = (N - n)))
-  #   )
-  # )
-  # comp_dat_unval = cbind(comp_dat_unval, int = 1) ### add intercept column
-  # comp_dat_unval = comp_dat_unval[, unique(c("int", Y, X_val, C, Z, Bspline, "k"))]
   comp_dat_all = rbind(comp_dat_val, comp_dat_unval)
-  ##############################################################################
-  # # Rescale all the covariates for numerical stability -------------------------
-  # comp_dat_all[, X_val] = (comp_dat_all[, X_val] - mean(comp_dat_all[, X_val])) / sd(comp_dat_all[, X_val])
   ##############################################################################
   # Initialize analysis model parameters ---------------------------------------
   ## Set initial values for beta, eta, and theta -------------------------------
@@ -250,7 +238,6 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
       byrow = FALSE
     )
     xj_phat = xj_wide * M_step_res$new_p
-
     ## Calculate predicted X given error-prone X* and Z
     xhat = data[, X_val] ### initialize with validated X (when non-missing)
     for (i in which(is.na(xhat))) {
