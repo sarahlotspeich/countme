@@ -54,7 +54,7 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                               data = data)
   ## Re-extract covariate names ------------------------------------------------
   C = setdiff(colnames(analysis_mat)[-1], X_val)
-  Z = setdiff(colnames(zeroinfl_mat)[-1], X_val)
+  Z = setdiff(colnames(zeroinfl_mat)[-1])
   ### Rewrite model formulas using column names from the model matrices --------
   if (length(colnames(zeroinfl_mat)) > 1) { #### if there are covariates in the zero-inflation model
     re_analysis_formula = paste0(Y, "~",
