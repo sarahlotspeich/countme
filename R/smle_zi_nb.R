@@ -171,7 +171,8 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                                     comp_dat_unval = comp_dat_unval,
                                     m = m,
                                     N = N,
-                                    n = n)
+                                    n = n,
+                                    use_predict_pYgivX = FALSE)
     ############################################################################
     # M Step -------------------------------------------------------------------
     M_step_res = M_step_zeroinfl_nb(phi_aug = E_step_res$phi_aug,
