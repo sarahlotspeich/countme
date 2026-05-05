@@ -1,7 +1,7 @@
 #' @importFrom bizicount dzinb
 smle_zi_nb_od_ll = function(N, n, prev_beta_fit = NULL, Y, Bspline, comp_dat_all,
                             beta = NULL, eta = NULL, theta = NULL, beta_cols = NULL,
-                            eta_cols = NULL, p, use_predict_pYgivX = TRUE) {
+                            eta_cols = NULL, p, use_predict_pYgivX = FALSE) {
   m = nrow(p)
 
   ##############################################################################
