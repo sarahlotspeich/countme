@@ -12,23 +12,26 @@ smle_zi_nb(
   pert_scale = 1,
   tol = 1e-04,
   max_iter = 1000,
+  optimizer = "nlm",
   output = "coeff"
 )
 }
 \arguments{
-\item{analysis_formula}{analysis model formula (or coercible to formula), a formula expression as for other regression models. The response should be the negative binomial model outcome, and the covariates for the zero inflation model should be included after a \code{|} as described in the documentation for \code{pscl::zeroinfl}.}
+\item{analysis_formula}{formula, analysis model formula (or coercible to formula), a formula expression as for other regression models. The response should be the negative binomial model outcome, and the covariates for the zero inflation model should be included after a \code{|} as described in the documentation for \code{pscl::zeroinfl}.}
 
 \item{error_formula}{formula, covariate error model formula (or coercible to formula), a formula expression as for other regression models. The response should be the error-free version of the error-prone of the covariate, and the covariate should be the names of the B-spline columns.}
 
-\item{data}{dataset containing at least the variables included in \code{error_formula} and \code{analysis_formula}.}
+\item{data}{dataframe, dataset containing at least the variables included in \code{error_formula} and \code{analysis_formula}.}
 
-\item{no_se}{Indicator for whether standard errors are desired. Defaults to \code{no_se = FALSE}.}
+\item{no_se}{logical, indicator for whether standard errors are desired. Defaults to \code{no_se = FALSE}.}
 
 \item{pert_scale}{Size of the perturbation used in estimating the standard errors via profile likelihood. If none is supplied, default is \code{pert_scale = 1}.}
 
-\item{tol}{Tolerance between iterations in the EM algorithm used to define convergence.}
+\item{tol}{scalar, tolerance between iterations in the EM algorithm used to define convergence.}
 
-\item{max_iter}{Maximum number of iterations allowed in the EM algorithm.}
+\item{max_iter}{scalar, maximum number of iterations allowed in the EM algorithm.}
+
+\item{optimizer}{string, string specifying the optimizer to be used for fitting (passed to \code{zic.reg()}). Default is \code{optimizer = "nlm"}, but the other option is \code{"optim"} (with method BFGS).}
 
 \item{output}{character, level of fitted model output to be returned. Defaults to \code{output = "coeff"}, but \code{output = "all"} is also possible.}
 }

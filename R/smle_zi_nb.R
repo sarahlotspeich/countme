@@ -1,12 +1,13 @@
 #' Sieve maximum likelihood estimation for zero-inflated negative binomial regression problems with covariate measurement error
 #'
-#' @param analysis_formula analysis model formula (or coercible to formula), a formula expression as for other regression models. The response should be the negative binomial model outcome, and the covariates for the zero inflation model should be included after a \code{|} as described in the documentation for \code{pscl::zeroinfl}.
+#' @param analysis_formula formula, analysis model formula (or coercible to formula), a formula expression as for other regression models. The response should be the negative binomial model outcome, and the covariates for the zero inflation model should be included after a \code{|} as described in the documentation for \code{pscl::zeroinfl}.
 #' @param error_formula formula, covariate error model formula (or coercible to formula), a formula expression as for other regression models. The response should be the error-free version of the error-prone of the covariate, and the covariate should be the names of the B-spline columns.
-#' @param data dataset containing at least the variables included in \code{error_formula} and \code{analysis_formula}.
-#' @param no_se Indicator for whether standard errors are desired. Defaults to \code{no_se = FALSE}.
+#' @param data dataframe, dataset containing at least the variables included in \code{error_formula} and \code{analysis_formula}.
+#' @param no_se logical, indicator for whether standard errors are desired. Defaults to \code{no_se = FALSE}.
 #' @param pert_scale Size of the perturbation used in estimating the standard errors via profile likelihood. If none is supplied, default is \code{pert_scale = 1}.
-#' @param tol Tolerance between iterations in the EM algorithm used to define convergence.
-#' @param max_iter Maximum number of iterations allowed in the EM algorithm.
+#' @param tol scalar, tolerance between iterations in the EM algorithm used to define convergence.
+#' @param max_iter scalar, maximum number of iterations allowed in the EM algorithm.
+#' @param optimizer string, string specifying the optimizer to be used for fitting (passed to \code{zic.reg()}). Default is \code{optimizer = "nlm"}, but the other option is \code{"optim"} (with method BFGS).
 #' @param output character, level of fitted model output to be returned. Defaults to \code{output = "coeff"}, but \code{output = "all"} is also possible.
 #' @return
 #' \item{coefficients}{dataframe with final coefficient and standard error estimates (where applicable) for the analysis model.}
@@ -17,7 +18,7 @@
 #' @export
 #' @importFrom bizicount zic.reg
 smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_scale = 1,
-                      tol = 1E-4, max_iter = 1000, output = "coeff") {
+                      tol = 1E-4, max_iter = 1000, optimizer = "nlm", output = "coeff") {
   ##############################################################################
   # Extract variable names from user-specified formulas ------------------------
   ## Transform to formulas -----------------------------------------------------
@@ -139,7 +140,7 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
       data = data.frame(comp_dat_val,
                         check.names = FALSE),
       dist = "nbinom",
-      optimizer = "nlm"
+      optimizer = optimizer
     )
   )
   prev_beta = beta0 = matrix(data = beta_fit0$coef[grepl(pattern = "ct_", x = names(beta_fit0$coef))],
@@ -187,7 +188,8 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                                     m = m,
                                     N = N,
                                     n = n,
-                                    tol = tol)
+                                    tol = tol,
+                                    optimizer = optimizer)
     ############################################################################
     # Check for global convergence ---------------------------------------------
     CONVERGED = M_step_res$prop_conv == 1
