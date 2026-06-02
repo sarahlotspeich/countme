@@ -1,5 +1,5 @@
 # Write function to simulate data ----------------------------------------------
-sim_data = function(eta0, n = 2000, sn = 35, sigmaU = 0.25, pv = 0.15, k = 2, beta = matrix(data = c(5, 1), ncol = 1)) {
+sim_data = function(eta0, n = 2000, sn = 35, sigmaU = 0.25, pv = 0.15, k = 0.5, beta = matrix(data = c(5, 1), ncol = 1)) {
   ## Generate error-free covariate
   x1 = x1f = rnorm(n = n)
   ## Generate additional error-free covariate
