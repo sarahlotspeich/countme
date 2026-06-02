@@ -31,7 +31,7 @@ sim_data = function(n = 2000, sn = 35, sigmaU = 0.25, pv = 0.15, k = 1, beta = m
 }
 
 # Write function to run multiple reps of this setting --------------------------
-run_sett_vary_n_pv = function(k, nrep = 50) {
+run_sett_vary_dispersion = function(k, nrep = 50) {
   ## Initialize empty dataframe for results
   res = data.frame(rep = 1:nrep,
                    k,
