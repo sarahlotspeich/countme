@@ -34,7 +34,7 @@ sim_data = function(n, sn, sigmaU = 0.25, pv = 0.15, k = 1, beta = matrix(data =
 run_sett_vary_n_pv = function(n, pv, sn, nrep = 50) {
   ## Initialize empty dataframe for results
   res = data.frame(rep = 1:nrep,
-                   n, pv, sn, theta = k, sigmaU,
+                   n, pv, sn, 
                    beta0_gs = NA,
                    beta1_gs = NA,
                    theta_gs = NA,
