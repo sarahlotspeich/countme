@@ -55,13 +55,16 @@ M_step_zeroinfl_nb = function(phi_aug, psi_t, ## weights and quantities from the
                               re_analysis_formula, comp_dat_all, prev_beta, prev_eta, prev_theta, ## to update parameters for the outcome model Y|X,Z
                               prev_p, p_val_num, ## to update parameters for the exposure model X|X*(,Z)
                               m, N, n, ## sample sizes (for indexing)
-                              tol, optimizer) { ## criterion for convergence
+                              tol, optimizer, trim_phi_below = 1E-4) { ## criterion for convergence
+  ## If requested, remove rows where phi is effectively zero
+  keep_rows = which(phi_aug >= trim_phi_below)
+
   ## Update beta using weighted zero-inflated negative binomial regression -----
   new_fit = suppressWarnings(
     zic.reg(
       fmla = as.formula(re_analysis_formula),
       data = data.frame(comp_dat_all, phi_aug,
-                        check.names = FALSE),
+                        check.names = FALSE)[keep_rows, ],
       weights = phi_aug,
       dist = "nbinom",
       optimizer = optimizer,
