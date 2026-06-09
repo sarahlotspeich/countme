@@ -90,7 +90,8 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
                    se_beta1_smle_zi = NA,
                    se_eta0_smle_zi = NA,
                    se_eta1_smle_zi = NA,
-                   se_theta_smle_zi = NA)
+                   se_theta_smle_zi = NA,
+                   conv_msg_smle_zi = NA)
 
   ## Loop over replications ----------------------------------------------------
   print(Sys.time()) ## print start time (for reference)
@@ -153,7 +154,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
     ### Save estimates to res
     res[r, c("beta0_smle_zi", "beta1_smle_zi", "eta0_smle_zi", "eta1_smle_zi", "theta_smle_zi")] = with(smle_fit, coefficients$Estimate)
     res[r, c("se_beta0_smle_zi", "se_beta1_smle_zi", "se_eta0_smle_zi", "se_eta1_smle_zi", "se_theta_smle_zi")] = with(smle_fit, coefficients$`Std. Error`)
-
+    res[r, "conv_msg_smle_zi = NA"] = with(smle_fit, converged_msg)
     ### Track progress
     if (r %% 25 == 0) {
       print(r)
