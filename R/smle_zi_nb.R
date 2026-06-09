@@ -333,8 +333,8 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                                max_iter = max_iter)
     if (any(is.na(single_pert_coeff))) {
       I_coeff = matrix(data = NA,
-                       nrow = nrow(new_coeff),
-                       ncol = nrow(new_coeff))
+                       nrow = length(new_coeff),
+                       ncol = length(new_coeff))
       SE_CONVERGED = FALSE
     } else {
       spt_wide = matrix(data = rep(c(single_pert_coeff),
