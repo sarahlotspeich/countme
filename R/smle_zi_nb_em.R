@@ -60,17 +60,40 @@ M_step_zeroinfl_nb = function(phi_aug, psi_t, ## weights and quantities from the
   keep_rows = which(phi_aug >= trim_phi_below)
 
   ## Update beta using weighted zero-inflated negative binomial regression -----
-  new_fit = suppressWarnings(
-    zic.reg(
-      fmla = as.formula(re_analysis_formula),
-      data = data.frame(comp_dat_all, phi_aug,
-                        check.names = FALSE)[keep_rows, ],
-      weights = phi_aug,
-      dist = "nbinom",
-      optimizer = optimizer,
-      starts = c(prev_beta, prev_eta, 1 / prev_theta),
-    )
+  new_fit = tryCatch(
+    suppressWarnings(
+      zic.reg(
+        fmla = as.formula(re_analysis_formula),
+        data = data.frame(comp_dat_all, phi_aug,
+                          check.names = FALSE)[keep_rows, ],
+        weights = phi_aug,
+        dist = "nbinom",
+        optimizer = optimizer,
+        starts = c(prev_beta, prev_eta, 1 / prev_theta),
+      )
+    ),
+    error = function(e) {
+      if (grepl("singular|solve.default", conditionMessage(e), ignore.case = TRUE)) {
+        warning("Zero-inflated model failed due to a singular system. ",
+                "Consider refitting without zero inflation.")
+      } else {
+        warning("zic.reg failed with unexpected error: ", conditionMessage(e))
+      }
+      NULL
+    }
   )
+
+  ## If zic.reg failed, return previous values with converged = FALSE ----------
+  if (is.null(new_fit)) {
+    return(list(new_beta_fit = NULL,
+                new_beta = prev_beta,
+                new_eta = prev_eta,
+                new_theta = prev_theta,
+                new_p = prev_p,
+                prop_conv = 0,
+                zicreg_converged = FALSE))
+  }
+
   new_beta = matrix(data = new_fit$coef[grepl(pattern = "ct_", x = names(new_fit$coef))],
                     ncol = 1)
   new_eta = matrix(data = new_fit$coef[grepl(pattern = "zi_", x = names(new_fit$coef))],
@@ -99,7 +122,8 @@ M_step_zeroinfl_nb = function(phi_aug, psi_t, ## weights and quantities from the
               new_eta = new_eta,
               new_theta = new_theta,
               new_p = new_p,
-              prop_conv = prop_conv))
+              prop_conv = prop_conv,
+              zicreg_converged = TRUE))
 }
 
 M_step_zeroinfl_nb_ponly = function(psi_t, ## weights and quantities from the E-step

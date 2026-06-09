@@ -190,6 +190,14 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                                     n = n,
                                     tol = tol,
                                     optimizer = optimizer)
+    ## Check for zic.reg() non-convergence due to singular matrix, etc. --------
+    if (!M_step_res$zicreg_converged) {
+      return(list(coefficients = coeff_df,
+                  vcov = NA,
+                  converged = FALSE,
+                  se_converged = NA,
+                  converged_msg = "numeric error with zic.reg. consider trying without zero-inflation."))
+    }
     ############################################################################
     # Check for global convergence ---------------------------------------------
     CONVERGED = M_step_res$prop_conv == 1
