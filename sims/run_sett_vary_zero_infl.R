@@ -124,7 +124,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
     )
 
     ### Save estimates to res
-    if (!is.null(new_fit)) {
+    if (!is.null(gs_fit)) {
       res[r, c("beta0_gs", "beta1_gs", "eta0_gs", "eta1_gs", "theta_gs")] = gs_fit$coef
       res[r, c("se_beta0_gs","se_beta1_gs", "se_eta0_gs", "se_eta1_gs", "se_theta_gs")] = sqrt(diag(vcov(gs_fit)))
     } else {
@@ -153,7 +153,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
     )
 
     ### Save estimates to res
-    if (!is.null(new_fit)) {
+    if (!is.null(n_fit)) {
       res[r, c("beta0_n", "beta1_n", "eta0_n", "eta1_n", "theta_n")] = n_fit$coef
       res[r, c("se_beta0_n","se_beta1_n", "se_eta0_n", "se_eta1_n", "se_theta_n")] = sqrt(diag(vcov(n_fit)))
     } else {
@@ -183,7 +183,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
     )
 
     ### Save estimates to res
-    if (!is.null(new_fit)) {
+    if (!is.null(cc_fit)) {
       res[r, c("beta0_cc", "beta1_cc", "eta0_cc", "eta1_cc", "theta_cc")] = cc_fit$coef
       res[r, c("se_beta0_cc","se_beta1_cc", "se_eta0_cc", "se_eta1_cc", "se_theta_cc")] = sqrt(diag(vcov(cc_fit)))
     } else {
