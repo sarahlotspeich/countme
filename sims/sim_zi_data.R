@@ -1,8 +1,8 @@
 # Write function to simulate zero-inflated data --------------------------------
 sim_zi_data_ali = function(
-    eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 0.25, pv = 0.15, k = 0.3, 
+    eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 10, gammaU = 0.25, pv = 0.15, k = 0.3, 
     beta = matrix(data = c(-1.7, 0.2, 0.8), ncol = 1), 
-    pS = rep(seq(0.1, 0.25, by = 0.05), times = 2), tprS = 0.95, fprS = 0.05, 
+    pS = rep(seq(0.3, 0.7, by = 0.1), times = 2), tprS = 0.95, fprS = 0.05, 
     pM = seq(0.05, 0.95, by = 0.1)
     ) {
   ## Generate error-free covariate (validated ALI)
