@@ -154,7 +154,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
 
     ## Fit SMLE model
     smle_fit = smle_nb(analysis_formula = y ~ x1,
-                       error_formula = paste("x1 ~", paste(paste0("bs", 1:sn), collapse = "+")),
+                       error_formula = paste("x1 ~", paste(grep(pattern = "bs", x = colnames(rdat), value = TRUE), collapse = "+")),
                        data = rdat,
                        no_se = FALSE)
     ### Save estimates to res
@@ -164,7 +164,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
 
     ## Fit SMLE model
     smle_fit = smle_zi_nb(analysis_formula = y ~ x1 | z,
-                          error_formula = paste("x1 ~", paste(paste0("bs", 1:sn), collapse = "+")),
+                          error_formula = paste("x1 ~", paste(grep(pattern = "bs", x = colnames(rdat), value = TRUE), collapse = "+")),
                           data = rdat,
                           no_se = FALSE)
 
