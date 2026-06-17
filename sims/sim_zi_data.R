@@ -24,7 +24,7 @@ sim_zi_data_ali = function(eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 
     prob = 0.4
     )
   ### Design matrix (add intercept column)
-  x = data.matrix(data.frame(int = 1, x1 = x1, z = z)) ## n x (p + 1) matrix
+  x = data.matrix(data.frame(int = 1, x1 = (x1 / 10), z = z)) ## n x (p + 1) matrix
   ### Mean parameters for Y|X
   mu = exp(x %*% beta)
   
