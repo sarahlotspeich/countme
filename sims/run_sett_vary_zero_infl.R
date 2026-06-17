@@ -68,7 +68,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
     gs_fit = tryCatch(
       suppressWarnings(
         zic.reg(
-          fmla = y ~ x1f | z,
+          fmla = y ~ x1f + z | z,
           data = rdat,
           dist = "nbinom",
           optimizer = "nlm"
@@ -97,7 +97,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
     n_fit = tryCatch(
       suppressWarnings(
         zic.reg(
-          fmla = y ~ x1star | z,
+          fmla = y ~ x1star + z | z,
           data = rdat,
           dist = "nbinom",
           optimizer = "nlm"
@@ -127,7 +127,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
     cc_fit = tryCatch(
       suppressWarnings(
         zic.reg(
-          fmla = y ~ x1 | z,
+          fmla = y ~ x1 + z | z,
           data = rdat_cc,
           dist = "nbinom",
           optimizer = "nlm"
@@ -153,7 +153,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
     }
 
     ## Fit SMLE model
-    smle_fit = smle_nb(analysis_formula = y ~ x1,
+    smle_fit = smle_nb(analysis_formula = y ~ x1 + z,
                        error_formula = paste("x1 ~", paste(grep(pattern = "bs", x = colnames(rdat), value = TRUE), collapse = "+")),
                        data = rdat,
                        no_se = FALSE)
@@ -163,7 +163,7 @@ run_sett_vary_zero_infl = function(eta0, nrep = 50) {
     res[r, "conv_msg_smle"] = with(smle_fit, converged_msg)
 
     ## Fit SMLE model
-    smle_fit = smle_zi_nb(analysis_formula = y ~ x1 | z,
+    smle_fit = smle_zi_nb(analysis_formula = y ~ x1 + z| z,
                           error_formula = paste("x1 ~", paste(grep(pattern = "bs", x = colnames(rdat), value = TRUE), collapse = "+")),
                           data = rdat,
                           no_se = FALSE)
