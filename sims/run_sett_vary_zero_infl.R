@@ -178,7 +178,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
 
     ### Save results
     res |>
-      write.csv(paste0("vary_zero_infl_neg", abs(eta0), "_seed", sim_seed, ".csv"),
+      write.csv(paste0("vary_zero_infl_neg", floor(abs(eta0)), "_seed", sim_seed, ".csv"),
                 row.names = FALSE)
   }
 }
