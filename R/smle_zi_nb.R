@@ -192,7 +192,10 @@ smle_zi_nb = function(analysis_formula, error_formula, data, no_se = TRUE, pert_
                                     optimizer = optimizer)
     ## Check for zic.reg() non-convergence due to singular matrix, etc. --------
     if (!M_step_res$zicreg_converged) {
-      return(list(coefficients = coeff_df,
+      return(list(coefficients = data.frame(coeff = NA,
+                                            se = NA,
+                                            z = NA,
+                                            p = NA),
                   vcov = NA,
                   converged = FALSE,
                   se_converged = NA,
