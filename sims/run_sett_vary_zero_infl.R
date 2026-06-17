@@ -1,44 +1,5 @@
-# Write function to simulate data ----------------------------------------------
-sim_data = function(eta0, n = 2000, sn = 35, sigmaU = 0.25, pv = 0.15, k = 0.5, beta = matrix(data = c(5, 1), ncol = 1)) {
-  ## Generate error-free covariate
-  x1 = x1f = rnorm(n = n)
-  ## Generate additional error-free covariate
-  z = rbinom(n = n,
-             size = 1,
-             prob = 0.2)
-  ### Design matrix (add intercept column)
-  x = data.matrix(data.frame(int = 1, x1 = x1)) ## n x (p + 1) matrix
-  ### Mean parameters for Y|X
-  mu = exp(x %*% beta)
-  ## Generate outcome
-  y = rnbinom(n = n,
-              size = k,
-              prob = (k / (mu + k)))
-  ### Add potential zero inflation
-  g = rbinom(n = n,
-             size = 1,
-             prob = 1 / (1 + exp(- (eta0 + z))))
-  y[g == 1] = 0 #### if Z = 1, force Y = 0
-  ## Generate error-prone covariate
-  x1star = x1 + rnorm(n = 100)
-  ## Generate validation indicators
-  v = sample(x = c(0, 1),
-             size = n,
-             replace = TRUE,
-             #prob = c(0.65, 0.35))
-             prob = c((1 - pv), pv))
-  x1[v == 0] = NA
-  ## Setup new B-splines
-  B = splines::bs(x = x1star, ## Error-prone ALI (from EHR)
-                  df = sn,
-                  Boundary.knots = range(x1star),
-                  intercept = TRUE)
-  colnames(B) = paste0("bs", seq(1, sn))
-
-  ## Build dataset
-  data = data.frame(y, x1f, x1, x1star, z, B)
-  return(data)
-}
+# Source data generating function ----------------------------------------------
+source("https://raw.githubusercontent.com/sarahlotspeich/countme/refs/heads/main/sims/sim_zi_data.R")
 
 # Write function to run multiple reps of this setting --------------------------
 run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
@@ -100,7 +61,7 @@ run_sett_vary_zero_infl = function(eta0, sn = 35, nrep = 50) {
   print(Sys.time()) ## print start time (for reference)
   for (r in 1:nrep) {
     ### Simulate data
-    rdat = sim_data(eta0 = eta0)
+    rdat = sim_zi_data_ali(eta0 = eta0)
 
     ## Fit gold standard model
     gs_fit = tryCatch(
