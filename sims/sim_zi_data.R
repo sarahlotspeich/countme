@@ -1,5 +1,5 @@
 # Write function to simulate zero-inflated data --------------------------------
-sim_zi_data = function(eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 0.25, pv = 0.15, k = 0.3, 
+sim_zi_data_ali = function(eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 0.25, pv = 0.15, k = 0.3, 
                        beta = matrix(data = c(-1.7, 0.2, 0.8), ncol = 1), 
                        pS = c(0.2500000, 0.9870130, 0.4549098, 0.1450000, 0.0580000,
                               0.2490119, 0.3138501, 0.3316391, 0.3111111, 0.0000000),
