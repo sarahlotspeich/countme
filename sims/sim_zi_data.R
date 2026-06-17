@@ -1,11 +1,10 @@
 # Write function to simulate zero-inflated data --------------------------------
-sim_zi_data_ali = function(eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 0.25, pv = 0.15, k = 0.3, 
-                       beta = matrix(data = c(-1.7, 0.2, 0.8), ncol = 1), 
-                       pS = c(0.2500000, 0.9870130, 0.4549098, 0.1450000, 0.0580000,
-                              0.2490119, 0.3138501, 0.3316391, 0.3111111, 0.0000000),
-                       tprS = 0.95, fprS = 0.05,
-                       pM = c(0.996, 0.153, 0.002, 0.000, 0.000,
-                              0.494, 0.213, 0.213, 0.955, 0.983)) {
+sim_zi_data_ali = function(
+    eta0 = -7.4, eta1 = 6.6, n = 2000, sn = 35, gammaU = 0.25, pv = 0.15, k = 0.3, 
+    beta = matrix(data = c(-1.7, 0.2, 0.8), ncol = 1), 
+    pS = rep(seq(0.1, 0.25, by = 0.05), times = 2), tprS = 0.95, fprS = 0.05, 
+    pM = seq(0.05, 0.95, by = 0.1)
+    ) {
   ## Generate error-free covariate (validated ALI)
   ### Begin with stress indicators (10 per person) from Bernoulli (pS)
   S = rbinom(n = n * 10,
