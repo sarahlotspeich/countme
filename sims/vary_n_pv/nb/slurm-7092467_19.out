@@ -1,0 +1,102 @@
+#########################BEGIN-PROLOG#########################
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-13
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-10
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-06
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-06
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-02
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-09
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-03
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-13
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-20
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-20
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-20
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-16
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+JobName   = 1000/50
+Account   = lotspeichgrp
+NodeList  = cpu-amd-14
+Resources = cpu=1,mem=116G,node=1,billing=9
+WorkDir   = /home/lotspes/smle_negbin/vary_n_pv/nb
+###########################END-PROLOG#########################
+SLURM_JOBID:  7092467
+SLURM_ARRAY_TASK_ID:  19
+SLURM_ARRAY_JOB_ID:  7092467
+ℹ SHA-1 hash of file is "ef44d66536f966d73cd8418c4d5f79e0ef78a03f"
+[1] "2026-06-02 18:12:35 EDT"
+[1] "2026-06-02 18:12:35 EDT"
+[1] 25
+[1] "2026-06-02 18:51:45 EDT"
+[1] 50
+[1] "2026-06-02 19:51:01 EDT"
