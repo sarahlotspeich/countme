@@ -1,5 +1,5 @@
 # Write function to simulate data ----------------------------------------------
-sim_data = function(n, sn, sigmaU = 0.25, pv = 0.15, k = 0.5, beta = matrix(data = c(5, 1), ncol = 1)) {
+sim_data = function(n, sn, sigmaU = 0.25, pv = 0.15, k = 0.5, beta = matrix(data = c(-1.5, 0.2), ncol = 1)) {
   ## Generate error-free covariate
   x1 = x1f = rnorm(n = n)
   ### Design matrix (add intercept column)
@@ -9,7 +9,7 @@ sim_data = function(n, sn, sigmaU = 0.25, pv = 0.15, k = 0.5, beta = matrix(data
   ## Generate outcome
   y = rnbinom(n = n,
               size = k,
-              prob = (k / (mu + k)))
+              mean = mu)
   ## Generate error-prone covariate
   x1star = x1 + rnorm(n = n, sd = sigmaU)
   ## Generate validation indicators
